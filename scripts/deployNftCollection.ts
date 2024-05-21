@@ -11,7 +11,7 @@ export async function run(provider: NetworkProvider) {
     const metadataFolderPath: string = './data/metadata';
     const imagesFolderPath: string = './data/images';
     const {metadataIPFSHash} = await uploadDataToIPFS(metadataFolderPath, imagesFolderPath);
-    // const metadataIPFSHash: string = "Qmaki2xD3XHnr4rZgq76JSbkaW3tPXyvesAp57tguwwSn1";
+    // const metadataIPFSHash: string = "QmULdxmubTi7gYVktFenLRvWKHXiUgagY8Tn7YyU3eAc4s";
 
     const collectionData = {
         ownerAddress: provider.sender().address!,
