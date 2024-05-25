@@ -13,7 +13,8 @@ export async function run(provider: NetworkProvider){
     const files = (await readdir(metadataFolderPath)).filter(file => !file.includes("collection.json"));
     const nftItemCode = await compile('NftItem');
     const senderAddress = provider.sender().address!;
-    const collectionAddress = Address.parse("EQCnp9EYWXy3MkOc7I_jBBLrR-bZrh_p0_ZSEu3wjD1IDLB1");
+
+    const collectionAddress = Address.parse("EQCf4DaVIlfpzzeLBJLEDQLwZYOq2lTEE9OlnTLCEwDtMK20");
     const collectionContract = provider.open(NftCollection.createFromAddress(collectionAddress));
 
     const nextIndex = Number(await collectionContract.getNextIndex());

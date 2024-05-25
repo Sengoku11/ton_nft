@@ -4,8 +4,7 @@ import {
     Cell,
     Contract,
     contractAddress,
-    ContractProvider,
-    internal, Sender,
+    Sender,
     SendMode,
     toNano
 } from "@ton/core";
@@ -27,14 +26,17 @@ export function NftItemConfigToCell(config: NftItemConfig): Cell {
     body.storeUint(config.itemIndex, 64);
     body.storeCoins(config.amount);
 
-    const nftItemContent = beginCell();
-    nftItemContent.storeAddress(config.itemOwnerAddress);
+    const contentUrl = beginCell()
+        .storeBuffer(Buffer.from(config.commonContentUrl))
+        .endCell();
 
-    const uriContent = beginCell();
-    uriContent.storeBuffer(Buffer.from(config.commonContentUrl));
-    nftItemContent.storeRef(uriContent.endCell());
+    const nftItemContent = beginCell()
+        .storeAddress(config.itemOwnerAddress)
+        .storeRef(contentUrl)
+        .endCell();
 
-    body.storeRef(nftItemContent.endCell());
+    body.storeRef(nftItemContent);
+
     return body.endCell();
 }
 

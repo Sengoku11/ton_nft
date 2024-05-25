@@ -9,7 +9,6 @@ import {
     SendMode,
     toNano
 } from '@ton/core';
-import { NftItemConfig, NftItemConfigToCell } from "./NftItem";
 import { encodeOffChainContent } from "../utils/encoding";
 
 export type NftCollectionConfig = {
