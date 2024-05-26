@@ -1,10 +1,14 @@
-import path from "path";
+import { updateEnv } from "../utils/updateEnv";
 import pinataSDK from "@pinata/sdk";
 import { readdirSync } from "fs";
+import path from "path";
 import { readFile, writeFile } from "fs/promises";
 
 
-export async function uploadDataToIPFS(metadataFolderPath: string, imagesFolderPath: string) {
+export async function run() {
+    const metadataFolderPath: string = './data/metadata';
+    const imagesFolderPath: string = './data/images';
+
     console.log("Started uploading images to IPFS...")
     const imagesIPFSHash = await uploadFolderToIPFS(imagesFolderPath);
     console.log(
@@ -18,9 +22,9 @@ export async function uploadDataToIPFS(metadataFolderPath: string, imagesFolderP
         `Successfully uploaded the metadata to ipfs: https://gateway.pinata.cloud/ipfs/${metadataIPFSHash}`
     );
 
-    return {imagesIPFSHash, metadataIPFSHash}
+    updateEnv("IMAGES_IPFS_HASH", imagesIPFSHash);
+    updateEnv("METADATA_IPFS_HASH", metadataIPFSHash);
 }
-
 
 export async function uploadFolderToIPFS(folderPath: string): Promise<string> {
     const pinata = new pinataSDK({

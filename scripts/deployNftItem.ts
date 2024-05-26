@@ -8,13 +8,14 @@ import { NftItem } from "../wrappers/NftItem";
 
 
 export async function run(provider: NetworkProvider){
-    const client = connectTonClient(provider.network())
     const metadataFolderPath: string = "./data/metadata";
+
+    const client = connectTonClient(provider.network())
     const files = (await readdir(metadataFolderPath)).filter(file => !file.includes("collection.json"));
     const nftItemCode = await compile('NftItem');
     const senderAddress = provider.sender().address!;
 
-    const collectionAddress = Address.parse("EQCf4DaVIlfpzzeLBJLEDQLwZYOq2lTEE9OlnTLCEwDtMK20");
+    const collectionAddress = Address.parse(process.env.NFT_COLLECTION_ADDRESS as string);  // run deployNftCollection if empty
     const collectionContract = provider.open(NftCollection.createFromAddress(collectionAddress));
 
     const nextIndex = Number(await collectionContract.getNextIndex());

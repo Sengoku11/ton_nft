@@ -4,9 +4,10 @@ import { readdir } from "fs/promises";
 
 
 export async function run(provider: NetworkProvider) {
-    const nftStorageFee = toNano('0.05');
-    const metadataFolderPath = "./data/metadata"
-    const collectionAddress = Address.parse("EQBCKeMlR_1isBfrHdSOhKCLNH_XmANCYojLec4Gsnc4uxJc");
+    const nftStorageFee = 0.05;
+    const approxTxFee = 0.03;
+    const metadataFolderPath = "./data/metadata";
+    const collectionAddress = Address.parse(process.env.NFT_COLLECTION_ADDRESS as string);  // run deployNftCollection if empty
 
     const files = (await readdir(metadataFolderPath)).filter(file => !file.includes("collection.json"));
     const nftDict = Dictionary.empty<number, Cell>()
@@ -26,7 +27,7 @@ export async function run(provider: NetworkProvider) {
         .storeUint(0, 64)   // queryId
         .storeDict(nftDict, Dictionary.Keys.Uint(64), {
             serialize: (src, builder) => {
-                builder.storeCoins(nftStorageFee);
+                builder.storeCoins(toNano(nftStorageFee));
                 builder.storeRef(src);
             },
             parse: (src) => {
@@ -39,7 +40,7 @@ export async function run(provider: NetworkProvider) {
         .endCell();
 
     await provider.sender().send({
-        value: toNano(files.length * 0.05 + 0.05),
+        value: toNano(files.length * nftStorageFee + approxTxFee),
         to: collectionAddress,
         body: bodyCell,
         sendMode: SendMode.PAY_GAS_SEPARATELY,

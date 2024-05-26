@@ -1,13 +1,10 @@
 import { toNano } from '@ton/core';
 import { NftCollection } from '../wrappers/NftCollection';
 import { compile, NetworkProvider } from '@ton/blueprint';
-import { uploadDataToIPFS } from "../utils/uploadToIPFS";
+import { updateEnv } from "../utils/updateEnv";
 
 export async function run(provider: NetworkProvider) {
-    const metadataFolderPath: string = './data/metadata';
-    const imagesFolderPath: string = './data/images';
-    const {metadataIPFSHash} = await uploadDataToIPFS(metadataFolderPath, imagesFolderPath);
-    // const metadataIPFSHash: string = "QmULdxmubTi7gYVktFenLRvWKHXiUgagY8Tn7YyU3eAc4s";
+    const metadataIPFSHash: string = process.env.METADATA_IPFS_HASH as string;
 
     const collectionData = {
         ownerAddress: provider.sender().address!,
@@ -25,4 +22,6 @@ export async function run(provider: NetworkProvider) {
 
     await nftCollection.sendDeploy(provider.sender(), toNano('0.05'));
     await provider.waitForDeploy(nftCollection.address);
+
+    updateEnv('NFT_COLLECTION_ADDRESS', nftCollection.address)
 }
