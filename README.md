@@ -1,5 +1,7 @@
 # ton_nft
 
+Example: https://testnet.getgems.io/collection/EQDzmfRpJkY-zLvfvngGTFoPV0uzT7MF8v0qvjrc9V7U6H6G#items
+
 ## Project structure
 
 -   `contracts` - source code of all the smart contracts of the project and their dependencies.
